@@ -44,9 +44,39 @@ function obterEndereco(idUsuario, callback) {
                 rua: 'dos bobos',
                 numero: 0
             })
-        }, 1000); 
+        }, 2000); 
 }
 
+//1 Add a palavra async -> automaticamente ela retornará uma promise
+main()
+async function main() {
+    try {
+        console.time('medida-promse')
+        const usuario = await obterUsuario()
+      //  const telefone = await obterTelefone(usuario.id)
+      //  const endereco = await obterEnderecoAsync(usuario.id)
+      const resultado = await Promise.all([
+        obterTelefone(usuario.id),
+        obterEnderecoAsync(usuario.id)
+      ])
+
+      const endereco = resultado [1]
+      const telefone = resultado [0]
+
+        console.log(`
+        Nome: ${usuario.nome},
+        Telefone: (${telefone.ddd}) ${telefone.telefone},
+        Endereco: ${endereco.rua}, ${endereco.numero}
+        
+        `)
+        console.timeEnd('medida-promse') //para capturar o tempo de execução
+    }
+    catch (error) {
+        console.error('Deu ruim', error)
+    }
+}
+
+/*
 const usuarioPromise = obterUsuario()
 //para manipular o sucesso usamos a função .then
 //para manipular erros, usamos o .catch
@@ -86,7 +116,7 @@ usuarioPromise
     .catch(function(error) {
         console.error('Deu ruim', error)
     })
-
+*/
  /*
 obterUsuario(function resolverUsuario(error, usuario) {
 
